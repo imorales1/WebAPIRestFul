@@ -18,10 +18,17 @@ namespace WebApiAutores.Controllers
         [HttpGet]
         [HttpGet("listado")]
         [HttpGet("/listado")]
-        public IEnumerable<Autor> Get()
+        public async  Task<ActionResult<List<Autor>>> Get()
         {
-            return context.Autores.Include(x => x.Libros).ToList();
+            try
+            {
+                return await context.Autores.Include(x => x.Libros).ToListAsync();
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
         //public async Task<ActionResult <List<Autor>>> Get()
         //{
         //    //return new List<Autor>()
@@ -33,27 +40,39 @@ namespace WebApiAutores.Controllers
         //    return await context.Autores.Include(x => x.Libros).ToListAsync();
         //}
 
-        [HttpGet("primero")]
-        public async Task<ActionResult<Autor>> PrimerAutor()
+        [HttpGet("primero")]  //api/autores/primero/?nombre=valor&apellido=valor
+        public async Task<ActionResult<Autor>> PrimerAutor([FromHeader] int miValor, [FromQuery] string nombre)
         {
             return await context.Autores.FirstOrDefaultAsync();
         }
 
+        //[HttpGet("{id:int}")]
+        //public IActionResult Get(int id)
+        //{
+        //    //return await context.Autores.FirstOrDefaultAsync();
+        //    var autor = context.Autores.FirstOrDefault(a => a.Id == id);
+        //    if (autor == null)
+        //    {
+        //        //return BadRequest($"El autor: {id}, no existe!");
+        //    }
+
+        //    return Ok(7);
+        //}
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Autor>> Get(int id)
+        public async Task<ActionResult<Autor>> Get([FromRoute] int id)
         {
             //return await context.Autores.FirstOrDefaultAsync();
-            var existe = await context.Autores.AnyAsync(a => a.Id == id);
-            if(!existe)
+            var autor = await context.Autores.Include(x => x.Libros).FirstOrDefaultAsync(a => a.Id == id);
+            if (autor == null)
             {
                 return BadRequest($"El autor: {id}, no existe!");
             }
 
-            return await context.Autores.Include(x => x.Libros).FirstOrDefaultAsync(x => x.Id == id);
+            return autor;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Autor autor)
+        public async Task<ActionResult> Post([FromBody] Autor autor)
         {
             context.Add(autor);
             await context.SaveChangesAsync();

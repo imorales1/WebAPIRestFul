@@ -29,15 +29,21 @@ namespace WebApiAutores.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Libro libro)
         {
-            var existeAutor = await context.Autores.AnyAsync(x => x.Id == libro.AutorId);
-
-            if(!existeAutor)
+            try
             {
-                return BadRequest($"El autor {libro.AutorId} no existe!");
+                var existeAutor = await context.Autores.AnyAsync(x => x.Id == libro.AutorId);
+
+                if (!existeAutor)
+                {
+                    return BadRequest($"El autor {libro.AutorId} no existe!");
+                }
+                context.Add(libro);
+                await context.SaveChangesAsync();
+                return Ok();
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
-            context.Add(libro);
-            await context.SaveChangesAsync();
-            return Ok();
         }
     }
 }
