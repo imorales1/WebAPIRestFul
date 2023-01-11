@@ -8,10 +8,10 @@ namespace WebApiAutores.Entidades
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "El campo {0} es requerido.")]
-        [StringLength(maximumLength: 8, ErrorMessage = "El campo {0} no debe de tener más de {1} carácteres.")]
+        [StringLength(maximumLength: 50, ErrorMessage = "El campo {0} no debe de tener más de {1} carácteres.")]
         //[PrimeraLetraMayuscula]
         public string Nombre { get; set; }
-        [Range(18,20)]
+        [Range(10,85)]
         [NotMapped]
         public int Edad { get; set; }
         //[CreditCard]
