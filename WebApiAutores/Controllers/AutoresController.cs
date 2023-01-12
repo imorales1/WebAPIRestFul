@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using WebApiAutores.Entidades;
+using WebApiAutores.Servicios;
 
 namespace WebApiAutores.Controllers
 {
@@ -10,10 +11,34 @@ namespace WebApiAutores.Controllers
     public class AutoresController:ControllerBase
     {
         private readonly ApplicationDbContext context;
-        public AutoresController(ApplicationDbContext context)
+        private readonly IServicio servicio;
+        private readonly ServicioTransient servicioTransient;
+        private readonly ServicioScope servicioScope;
+        private readonly ServicioSingleton servicioSingleton;
+
+        public AutoresController(ApplicationDbContext context, IServicio servicio, 
+            ServicioTransient servicioTransient, ServicioScope servicioScope, ServicioSingleton servicioSingleton)
         {
             this.context = context;
-        } 
+            this.servicio = servicio;
+            this.servicioTransient = servicioTransient;
+            this.servicioScope = servicioScope;
+            this.servicioSingleton = servicioSingleton;
+        }
+
+        [HttpGet("GUID")]
+        public ActionResult ObtenerGuids()
+        {
+            return Ok(new
+            {
+                AutoresController_Transient = servicioTransient.Guid,
+                servicioa_Transiente = servicio.ObtenerTransient(),
+                AutoresController_Scoped = servicioScope.Guid,
+                servicio_Scoped = servicio.ObtenerScope(),
+                autorescontroller_Singleton = servicioSingleton.Guid,
+                servicio_Singleton = servicio.ObtenerSingleton()
+            });
+        }
 
         [HttpGet]
         [HttpGet("listado")]
@@ -22,6 +47,8 @@ namespace WebApiAutores.Controllers
         {
             try
             {
+                servicio.RealizarTarea();
+                var context = new ApplicationDbContext(null);
                 return await context.Autores.Include(x => x.Libros).ToListAsync();
             }catch(Exception ex)
             {
