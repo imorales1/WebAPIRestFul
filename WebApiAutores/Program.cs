@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using WebApiAutores;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,9 @@ startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-startup.Configure(app, app.Environment);
+var servicioLogger = (ILogger<Startup>)app.Services.GetService(typeof(ILogger<Startup>));
+
+startup.Configure(app, app.Environment, servicioLogger);
 
 // Configure the HTTP request pipeline.
 
