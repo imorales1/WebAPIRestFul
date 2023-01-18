@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using WebApiAutores.Entidades;
+using WebApiAutores.Filtros;
 using WebApiAutores.Servicios;
 
 namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    //[Authorize]
     public class AutoresController:ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -30,6 +33,8 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpGet("GUID")]
+        //[ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public ActionResult ObtenerGuids()
         {
             return Ok(new
@@ -46,18 +51,22 @@ namespace WebApiAutores.Controllers
         [HttpGet]
         [HttpGet("listado")]
         [HttpGet("/listado")]
+        //[ResponseCache(Duration = 10)]
+        [ServiceFilter(typeof(MiFiltroDeAccion))]
+        //[Authorize]
         public async  Task<ActionResult<List<Autor>>> Get()
         {
-            try
-            {
+            //try
+            //{
+                throw new NotImplementedException();
                 logger.LogInformation("Estamos obteniento los autores");
                 logger.LogWarning("Mensaje de prueba");
                 //servicio.RealizarTarea();
                 return await context.Autores.Include(x => x.Libros).ToListAsync();
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            //}catch(Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
         }
 
         //public async Task<ActionResult <List<Autor>>> Get()
