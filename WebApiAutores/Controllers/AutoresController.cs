@@ -58,7 +58,7 @@ namespace WebApiAutores.Controllers
         {
             //try
             //{
-                throw new NotImplementedException();
+                //throw new NotImplementedException();
                 logger.LogInformation("Estamos obteniento los autores");
                 logger.LogWarning("Mensaje de prueba");
                 //servicio.RealizarTarea();
