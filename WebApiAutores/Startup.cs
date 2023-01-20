@@ -2,7 +2,6 @@
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using WebApiAutores.Controllers;
-using WebApiAutores.MiddleWares;
 using WebApiAutores.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebApiAutores.Filtros;
@@ -33,14 +32,6 @@ namespace WebApiAutores
             services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("cnAutores")));
 
-            services.AddTransient<IServicio, ServicioA>();
-            //Implementando una clase como servicio
-            //services.AddSingleton<ServicioA>();
-
-            services.AddTransient<ServicioTransient>();
-            services.AddScoped<ServicioScope>();
-            services.AddSingleton<ServicioSingleton>();
-            services.AddTransient<MiFiltroDeAccion>();
             services.AddHostedService<EscribirEnArchivo>();
 
             services.AddResponseCaching();
@@ -50,26 +41,12 @@ namespace WebApiAutores
             { 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIAutores", Version = "v1" });
             });
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            //app.UseMiddleware<LoguearRespuestaHTTPMiddleware>();
-
-            app.UseLoguearRespuestaHTTP();
-            app.Map("/ruta1", app =>
-            {
-                app.Run(async contexto =>
-                {
-                    await contexto.Response.WriteAsync("Estoy interceptando la tubería");
-                });
-            });
-
-            //app.Run(async contexto =>
-            //{
-            //    await contexto.Response.WriteAsync("Estoy interceptando la tubería");
-            //});
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

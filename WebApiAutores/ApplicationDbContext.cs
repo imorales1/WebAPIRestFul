@@ -16,14 +16,23 @@ namespace WebApiAutores
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Autor>(autor =>
+            {
+                autor.ToTable("Autores");
+                autor.HasKey(p => p.Id);
+                autor.Property(p => p.Nombre).IsRequired();
+            });
+
             modelBuilder.Entity<Libro>(libro =>
             {
                 libro.ToTable("Libros");
                 libro.HasKey(p => p.Id);
                 //tarea.HasOne(p => p.categoria).WithMany(p => p.Tareas).HasForeignKey(p => p.CategoriaId);
-                libro.HasOne(p => p.Autor).WithMany(p => p.Libros).HasForeignKey(p => p.AutorId);
-                libro.Property(p => p.Titulo).IsRequired().HasMaxLength(50);
+                //libro.HasOne(p => p.Autor).WithMany(p => p.Libros).HasForeignKey(p => p.AutorId);
+                libro.Property(p => p.Titulo).IsRequired();
             });
+
+            
         }
     }
 }

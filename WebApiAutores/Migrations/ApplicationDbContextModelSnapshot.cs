@@ -30,11 +30,13 @@ namespace WebApiAutores.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Autores");
+                    b.ToTable("Autores", (string)null);
                 });
 
             modelBuilder.Entity("WebApiAutores.Entidades.Libro", b =>
@@ -45,35 +47,14 @@ namespace WebApiAutores.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AutorId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AutorId");
-
                     b.ToTable("Libros", (string)null);
-                });
-
-            modelBuilder.Entity("WebApiAutores.Entidades.Libro", b =>
-                {
-                    b.HasOne("WebApiAutores.Entidades.Autor", "Autor")
-                        .WithMany("Libros")
-                        .HasForeignKey("AutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Autor");
-                });
-
-            modelBuilder.Entity("WebApiAutores.Entidades.Autor", b =>
-                {
-                    b.Navigation("Libros");
                 });
 #pragma warning restore 612, 618
         }
