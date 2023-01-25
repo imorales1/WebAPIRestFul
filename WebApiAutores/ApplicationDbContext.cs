@@ -13,6 +13,8 @@ namespace WebApiAutores
 
         public DbSet<Autor> Autores { get; set; }
         public DbSet<Libro> Libros { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
+        public DbSet<AutorLibro> AutorLibro { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +34,8 @@ namespace WebApiAutores
                 libro.Property(p => p.Titulo).IsRequired();
             });
 
+            modelBuilder.Entity<AutorLibro>()
+                .HasKey(al => new { al.AutorId, al.LibroId });
             
         }
     }

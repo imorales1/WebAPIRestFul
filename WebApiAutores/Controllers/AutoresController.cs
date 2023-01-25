@@ -24,12 +24,12 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpGet]
-        public async  Task<ActionResult<List<Autor>>> Get()
+        public async  Task<ActionResult<List<AutorDTO>>> Get()
         {
             try
             {
-                //return await context.Autores.Include(x => x.Libros).ToListAsync();
-                return await context.Autores.ToListAsync();
+                var autores =  await context.Autores.ToListAsync();
+                return mapper.Map<List<AutorDTO>>(autores);
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Autor>> Get([FromRoute] int id)
+        public async Task<ActionResult<AutorDTO>> Get([FromRoute] int id)
         {
             //var autor = await context.Autores.Include(x => x.Libros).FirstOrDefaultAsync(a => a.Id == id);
             var autor = await context.Autores.FirstOrDefaultAsync(a => a.Id == id);
@@ -47,7 +47,20 @@ namespace WebApiAutores.Controllers
                 return BadRequest($"El autor: {id}, no existe!");
             }
 
-            return autor;
+            return mapper.Map<AutorDTO>(autor);
+        }
+
+        [HttpGet("{nombre}")]
+        public async Task<ActionResult<List<AutorDTO>>> Get([FromRoute] string nombre)
+        {
+            //var autor = await context.Autores.FirstOrDefaultAsync(NombAutor => NombAutor.Nombre == nombre);
+            var autor = await context.Autores.Where(NombAutor => NombAutor.Nombre.Contains(nombre)).ToListAsync();
+            if(autor == null)
+            {
+                return BadRequest($"No existe ningún autor con el nombre {nombre}.");
+            }
+
+            return mapper.Map<List<AutorDTO>>(autor);
         }
 
         [HttpPost]

@@ -13,14 +13,12 @@
         public Task StartAsync(CancellationToken cancellationToken)
         {
             timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
-            //throw new NotImplementedException();
             Escribir("Proceso iniciado");
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            //throw new NotImplementedException();
             timer.Dispose();
             Escribir("Proceso Finalizado");
             return Task.CompletedTask;
