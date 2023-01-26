@@ -32,7 +32,7 @@ namespace WebApiAutores
             services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("cnAutores")));
 
-            services.AddHostedService<EscribirEnArchivo>();
+            //services.AddHostedService<EscribirEnArchivo>();
 
             services.AddResponseCaching();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
