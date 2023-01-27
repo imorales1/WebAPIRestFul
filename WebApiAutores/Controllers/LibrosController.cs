@@ -32,14 +32,14 @@ namespace WebApiAutores.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<LibroDTO>> Get([FromRoute] int id)
+        [HttpGet("{id:int}", Name = "obtenerLibro")]
+        public async Task<ActionResult<LibroDTOConAutores>> Get([FromRoute] int id)
         {
             var libro = await context.Libros.Include(libroDb => libroDb.AutorLibro.OrderByDescending(x => x.Orden))
                 .ThenInclude(x => x.Autor).FirstOrDefaultAsync(a => a.Id == id);
             if (libro == null) { return BadRequest($"El libro: {id}, no existe"); }
 
-            return mapper.Map<LibroDTO>(libro);
+            return mapper.Map<LibroDTOConAutores>(libro);
         }
 
         [HttpPost]
@@ -70,7 +70,9 @@ namespace WebApiAutores.Controllers
                 }
                 context.Add(libro);
                 await context.SaveChangesAsync();
-                return Ok();
+
+                var libroDTO = mapper.Map<LibroDTO>(libro);
+                return CreatedAtRoute("obtenerLibro", new { id = libro.Id }, libroDTO);
             }
             catch (Exception ex)
             {
