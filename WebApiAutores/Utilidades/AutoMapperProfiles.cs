@@ -24,6 +24,8 @@ namespace WebApiAutores.Utilidades
 
             CreateMap<ComentarioCreacionDTO, Comentario>();
             CreateMap<Comentario, ComentarioDTO>();
+
+            CreateMap<LibroPatchDTO, Libro>().ReverseMap();
         }
 
         public List<AutorLibro> MapAutoresLibros(LibroCreacionDTO libroCreacionDTO, Libro libro)
