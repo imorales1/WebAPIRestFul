@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApiAutores.Entidades
 {
@@ -10,5 +11,7 @@ namespace WebApiAutores.Entidades
         public int LibroId { get; set; }
         //Proppiedad de navegación
         public Libro Libro { get; set; }
+        public string UsuarioId { get; set; }
+        public IdentityUser Usuario { get; set; }
     }
 }
